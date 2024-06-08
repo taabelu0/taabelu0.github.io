@@ -23,7 +23,7 @@
         document.getElementById('status').textContent = 'MQTT connection error: ' + err.message;
     });
 
-    window.addEventListener('deviceorientation', (event) => {
+    function handleOrientation(event) {
         const tilt = event.gamma; // Gamma represents the left-to-right tilt
         document.getElementById('tilt').textContent = tilt.toFixed(2);
         if (client.connected) {
@@ -31,7 +31,27 @@
             message.destinationName = "tilt/angle";
             client.send(message);
         }
-    });
+    }
+
+    function startOrientation() {
+        window.addEventListener('deviceorientation', handleOrientation, true);
+    }
+
+    // Request permission for iOS 13+ devices
+    if (typeof DeviceOrientationEvent.requestPermission === 'function') {
+        DeviceOrientationEvent.requestPermission()
+            .then(permissionState => {
+                if (permissionState === 'granted') {
+                    startOrientation();
+                } else {
+                    document.getElementById('status').textContent = 'Permission denied';
+                }
+            })
+            .catch(console.error);
+    } else {
+        // Handle non-iOS 13+ devices
+        startOrientation();
+    }
 </script>
 </body>
 </html>
