@@ -17,20 +17,18 @@
 
     client.on('connect', () => {
         document.getElementById('status').textContent = 'Connected to MQTT broker';
+        console.log('Connected to MQTT broker');
     });
 
     client.on('error', (err) => {
+        console.error('MQTT connection error:', err);
         document.getElementById('status').textContent = 'MQTT connection error: ' + err.message;
     });
 
     function handleOrientation(event) {
-        const tilt = event.gamma; // Gamma represents the left-to-right tilt
-        document.getElementById('tilt').textContent = tilt.toFixed(2);
-        if (client.connected) {
-            const message = new Paho.MQTT.Message(tilt.toString());
-            message.destinationName = "tilt/angle";
-            client.send(message);
-        }
+        const tilt = Math.round(event.beta);
+        document.getElementById('tilt').textContent = tilt;
+        client.publish('tilt/angle', tilt.toString());
     }
 
     function startOrientation() {
