@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Smartphone Tilt Sensor</title>
+    <script src="https://unpkg.com/mqtt/dist/mqtt.min.js"></script>
+</head>
+<body>
+<h1>Sending Tilt Angle</h1>
+<p id="status">Connecting to MQTT broker...</p>
+<p>Tilt Angle: <span id="tilt">0</span></p>
+
+<script>
+    // Connect to MQTT broker
+    const client = mqtt.connect('wss://test.mosquitto.org:8081');
+
+    client.on('connect', () => {
+        document.getElementById('status').textContent = 'Connected to MQTT broker';
+    });
+
+    client.on('error', (err) => {
+        document.getElementById('status').textContent = 'MQTT connection error: ' + err.message;
+    });
+
+    window.addEventListener('deviceorientation', (event) => {
+        const tilt = event.gamma; // Gamma represents the left-to-right tilt
+        document.getElementById('tilt').textContent = tilt.toFixed(2);
+        if (client.connected) {
+            const message = new Paho.MQTT.Message(tilt.toString());
+            message.destinationName = "tilt/angle";
+            client.send(message);
+        }
+    });
+</script>
+</body>
+</html>

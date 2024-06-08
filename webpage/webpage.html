@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MQTT Tilt Angle Display</title>
+    <script src="https://unpkg.com/mqtt/dist/mqtt.min.js"></script>
+</head>
+<body>
+<h1>Tilt Angle: <span id="angle">0</span></h1>
+
+<script>
+    // Connect to MQTT broker
+    const client = mqtt.connect('wss://test.mosquitto.org:8081');
+
+    client.on('connect', () => {
+        console.log('Connected');
+        client.subscribe('tilt/angle', (err) => {
+            if (!err) {
+                console.log('Subscribed to tilt/angle');
+            }
+        });
+    });
+
+    client.on('message', (topic, message) => {
+        if (topic === 'tilt/angle') {
+            document.getElementById('angle').textContent = message.toString();
+        }
+    });
+</script>
+</body>
+</html>
