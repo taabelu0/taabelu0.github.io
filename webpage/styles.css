@@ -1,0 +1,87 @@
+body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background-color: #f0f0f0;
+    margin: 0;
+    font-family: Arial, sans-serif;
+}
+
+.container {
+    text-align: center;
+    background: white;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+h1 {
+    color: #333;
+    margin: 0;
+    font-size: 24px;
+}
+
+.water-level {
+    width: 220px;
+    height: 110px;
+    background-color: #EEF1F4;
+    position: relative;
+    margin: 50px 0 0 0;
+    overflow: hidden;
+    border-radius: 6px;
+}
+
+.center-line {
+    height: 2px;
+    width: 12%;
+    position: absolute;
+    background-color: #597393;
+    top: calc(50% - 1px);
+}
+
+.center-line.left {
+    left: 0;
+}
+
+.center-line.right {
+    right: 0;
+}
+
+.level {
+    background: #cce0f0;
+    position: absolute;
+    width: 150%;
+    height: 100%;
+    bottom: -50%;
+    left: -25%;
+    transform: rotate(0deg);
+    transform-origin: center 0;
+    opacity: 0.5;
+}
+
+.animated {
+    animation: wave 2s linear 0s infinite alternate both;
+}
+
+@keyframes wave {
+    0% {
+        transform: rotate(20deg);
+    }
+    50%{
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(-20deg);
+    }
+}
+
+#levelValue {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    color: black;
+    text-align: center;
+    line-height: 110px;
+    font-size: 18px;
+}

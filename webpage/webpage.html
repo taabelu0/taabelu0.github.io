@@ -4,10 +4,19 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>MQTT Tilt Angle Display</title>
+    <link rel="stylesheet" href="styles.css">
     <script src="https://unpkg.com/mqtt/dist/mqtt.min.js"></script>
 </head>
 <body>
-<h1>Tilt Angle: <span id="angle">0</span></h1>
+<div class="container">
+    <h1>Tilt Angle:</h1>
+    <div class="water-level">
+        <div class="center-line left"></div>
+        <div class="center-line right"></div>
+        <div class="level" id="level"></div>
+        <div id="levelValue">0.00°</div>
+    </div>
+</div>
 
 <script>
     // Connect to MQTT broker
@@ -24,9 +33,27 @@
 
     client.on('message', (topic, message) => {
         if (topic === 'tilt/angle') {
-            document.getElementById('angle').textContent = message.toString();
+            const angle = parseFloat(message.toString());
+            document.getElementById('levelValue').textContent = angle.toFixed(2) + '°';
+            updateWaterLevel(angle);
         }
     });
+
+    function updateWaterLevel(angle) {
+        const level = document.getElementById('level');
+        const buffer = 1;
+
+        if (Math.abs(angle) <= buffer) {
+            if (level.classList.contains('animated')) {
+                level.classList.remove('animated');
+            }
+        } else {
+            if (!level.classList.contains('animated')) {
+                level.classList.add('animated');
+            }
+        }
+    }
+
 </script>
 </body>
 </html>
