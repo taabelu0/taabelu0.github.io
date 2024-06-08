@@ -10,6 +10,7 @@
 <h1>Sending Tilt Angle</h1>
 <p id="status">Connecting to MQTT broker...</p>
 <p>Tilt Angle: <span id="tilt">0</span></p>
+<button id="requestPermission" style="display:none;">Enable Sensor</button>
 
 <script>
     // Connect to MQTT broker
@@ -26,9 +27,12 @@
     });
 
     function handleOrientation(event) {
-        const tilt = Math.round(event.beta);
-        document.getElementById('tilt').textContent = tilt;
-        client.publish('tilt/angle', tilt.toString());
+        const tilt = event.gamma; // Gamma represents the left-to-right tilt
+        document.getElementById('tilt').textContent = tilt.toFixed(2);
+        console.log('Tilt angle:', tilt);
+        if (client.connected) {
+            client.publish('tilt/angle', tilt.toString());
+        }
     }
 
     function startOrientation() {
@@ -37,15 +41,19 @@
 
     // Request permission for iOS 13+ devices
     if (typeof DeviceOrientationEvent.requestPermission === 'function') {
-        DeviceOrientationEvent.requestPermission()
-            .then(permissionState => {
-                if (permissionState === 'granted') {
-                    startOrientation();
-                } else {
-                    document.getElementById('status').textContent = 'Permission denied';
-                }
-            })
-            .catch(console.error);
+        document.getElementById('requestPermission').style.display = 'block';
+        document.getElementById('requestPermission').addEventListener('click', () => {
+            DeviceOrientationEvent.requestPermission()
+                .then(permissionState => {
+                    if (permissionState === 'granted') {
+                        startOrientation();
+                        document.getElementById('requestPermission').style.display = 'none';
+                    } else {
+                        document.getElementById('status').textContent = 'Permission denied';
+                    }
+                })
+                .catch(console.error);
+        });
     } else {
         // Handle non-iOS 13+ devices
         startOrientation();
