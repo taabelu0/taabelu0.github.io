@@ -42,8 +42,12 @@
 
     function updateWaterLevel(angle) {
         const level = document.getElementById('level');
-        console.log(angle);
         level.style.transform = `rotate(${angle}deg)`;
+        if (angle > 0.2 || angle < -0.2) {
+            level.style.backgroundColor = '#cce0f0';
+        } else {
+            level.style.backgroundColor = 'green';
+        }
     }
 
 </script>

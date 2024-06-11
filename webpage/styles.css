@@ -52,29 +52,14 @@ h1 {
     background: #cce0f0;
     position: absolute;
     width: 150%;
-    height: 100%;
-    bottom: -50%;
+    height: 120%;
+    bottom: -70%;
     left: -25%;
     transform: rotate(0deg);
     transform-origin: center 0;
     opacity: 0.5;
 }
 
-.animated {
-    animation: wave 2s linear 0s infinite alternate both;
-}
-
-@keyframes wave {
-    0% {
-        transform: rotate(20deg);
-    }
-    50%{
-        transform: rotate(0deg);
-    }
-    100% {
-        transform: rotate(-20deg);
-    }
-}
 
 #levelValue {
     position: absolute;
