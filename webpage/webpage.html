@@ -21,6 +21,7 @@
 <script>
     // Connect to MQTT broker
     const client = mqtt.connect('wss://test.mosquitto.org:8081');
+    const level = document.getElementById('level');
 
     client.on('connect', () => {
         console.log('Connected');
@@ -41,17 +42,8 @@
 
     function updateWaterLevel(angle) {
         const level = document.getElementById('level');
-        const buffer = 1;
-
-        if (Math.abs(angle) <= buffer) {
-            if (level.classList.contains('animated')) {
-                level.classList.remove('animated');
-            }
-        } else {
-            if (!level.classList.contains('animated')) {
-                level.classList.add('animated');
-            }
-        }
+        console.log(angle);
+        level.style.transform = `rotate(${angle}deg)`;
     }
 
 </script>
